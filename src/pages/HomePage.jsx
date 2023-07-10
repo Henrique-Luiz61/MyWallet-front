@@ -1,8 +1,34 @@
-import styled from "styled-components"
-import { BiExit } from "react-icons/bi"
-import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai"
+import styled from "styled-components";
+import { BiExit } from "react-icons/bi";
+import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai";
+import { useEffect, useState } from "react";
+import { useContext } from "react";
+import { AuthContext } from "../contexts/auth";
+import axios from "axios";
+import { Link } from "react-router-dom";
 
 export default function HomePage() {
+  const [transacoes, setTransacoes] = useState([]);
+
+  const { token } = useContext(AuthContext);
+
+  useEffect(() => {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    const promise = axios.get(`${import.meta.env.VITE_API_URL}/home`, config);
+
+    promise.then((res) => {
+      setTransacoes(res.data);
+    });
+    promise.catch((err) => {
+      alert(err.response.data.message);
+    });
+  }, []);
+
   return (
     <HomeContainer>
       <Header>
@@ -12,21 +38,15 @@ export default function HomePage() {
 
       <TransactionsContainer>
         <ul>
-          <ListItemContainer>
-            <div>
-              <span>30/11</span>
-              <strong>Almoço mãe</strong>
-            </div>
-            <Value color={"negativo"}>120,00</Value>
-          </ListItemContainer>
-
-          <ListItemContainer>
-            <div>
-              <span>15/11</span>
-              <strong>Salário</strong>
-            </div>
-            <Value color={"positivo"}>3000,00</Value>
-          </ListItemContainer>
+          {transacoes.map((tra, i) => (
+            <ListItemContainer key={i}>
+              <div>
+                <span>{tra.data}</span>
+                <strong>{tra.descricao}</strong>
+              </div>
+              <Value color={"negativo"}>{tra.valor}</Value>
+            </ListItemContainer>
+          ))}
         </ul>
 
         <article>
@@ -35,27 +55,35 @@ export default function HomePage() {
         </article>
       </TransactionsContainer>
 
-
       <ButtonsContainer>
         <button>
-          <AiOutlinePlusCircle />
-          <p>Nova <br /> entrada</p>
+          <Link to={"/nova-transacao/entrada"}>
+            <AiOutlinePlusCircle />
+            <p>
+              Nova <br /> entrada
+            </p>
+          </Link>
         </button>
+
         <button>
-          <AiOutlineMinusCircle />
-          <p>Nova <br />saída</p>
+          <Link to={"/nova-transacao/saida"}>
+            <AiOutlineMinusCircle />
+            <p>
+              Nova <br />
+              saída
+            </p>
+          </Link>
         </button>
       </ButtonsContainer>
-
     </HomeContainer>
-  )
+  );
 }
 
 const HomeContainer = styled.div`
   display: flex;
   flex-direction: column;
   height: calc(100vh - 50px);
-`
+`;
 const Header = styled.header`
   display: flex;
   align-items: center;
@@ -64,7 +92,7 @@ const Header = styled.header`
   margin-bottom: 15px;
   font-size: 26px;
   color: white;
-`
+`;
 const TransactionsContainer = styled.article`
   flex-grow: 1;
   background-color: #fff;
@@ -76,19 +104,19 @@ const TransactionsContainer = styled.article`
   justify-content: space-between;
   article {
     display: flex;
-    justify-content: space-between;   
+    justify-content: space-between;
     strong {
       font-weight: 700;
       text-transform: uppercase;
     }
   }
-`
+`;
 const ButtonsContainer = styled.section`
   margin-top: 15px;
   margin-bottom: 0;
   display: flex;
   gap: 15px;
-  
+
   button {
     width: 50%;
     height: 115px;
@@ -101,12 +129,12 @@ const ButtonsContainer = styled.section`
       font-size: 18px;
     }
   }
-`
+`;
 const Value = styled.div`
   font-size: 16px;
   text-align: right;
   color: ${(props) => (props.color === "positivo" ? "green" : "red")};
-`
+`;
 const ListItemContainer = styled.li`
   display: flex;
   justify-content: space-between;
@@ -118,4 +146,4 @@ const ListItemContainer = styled.li`
     color: #c6c6c6;
     margin-right: 10px;
   }
-`
+`;

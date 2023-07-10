@@ -1,22 +1,64 @@
-import styled from "styled-components"
-import { Link } from "react-router-dom"
-import MyWalletLogo from "../components/MyWalletLogo"
+import styled from "styled-components";
+import { Link, useNavigate } from "react-router-dom";
+import MyWalletLogo from "../components/MyWalletLogo";
+import { useState } from "react";
+import axios from "axios";
+import { useContext } from "react";
+import { AuthContext } from "../contexts/auth";
 
 export default function SignInPage() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const { setToken } = useContext(AuthContext);
+
+  const navigate = useNavigate();
+
+  function signIn(e) {
+    e.preventDefault();
+
+    const newLogin = {
+      email: email,
+      password: password,
+    };
+
+    const URL = "http://localhost:5000";
+
+    const promise = axios.post(import.meta.env.VITE_API_URL, newLogin);
+
+    promise.then((res) => {
+      navigate("/home");
+      setToken(res.data);
+    });
+    promise.catch((err) => {
+      console.log("ERRO: ", err.response);
+      alert(err.response.data.message);
+    });
+  }
+
   return (
     <SingInContainer>
-      <form>
+      <form onSubmit={signIn}>
         <MyWalletLogo />
-        <input placeholder="E-mail" type="email" />
-        <input placeholder="Senha" type="password" autocomplete="new-password" />
-        <button>Entrar</button>
+        <input
+          placeholder="E-mail"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+        <input
+          placeholder="Senha"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+        <button type="submit">Entrar</button>
       </form>
 
-      <Link>
-        Primeira vez? Cadastre-se!
-      </Link>
+      <Link to={"/cadastro"}>Primeira vez? Cadastre-se!</Link>
     </SingInContainer>
-  )
+  );
 }
 
 const SingInContainer = styled.section`
@@ -25,4 +67,4 @@ const SingInContainer = styled.section`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-`
+`;

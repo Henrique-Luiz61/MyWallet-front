@@ -1,24 +1,81 @@
-import { Link } from "react-router-dom"
-import styled from "styled-components"
-import MyWalletLogo from "../components/MyWalletLogo"
+import { Link, useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import MyWalletLogo from "../components/MyWalletLogo";
+import { useState } from "react";
+import axios from "axios";
 
 export default function SignUpPage() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPass] = useState("");
+
+  const navigate = useNavigate();
+
+  function signUp(e) {
+    e.preventDefault();
+
+    const newUser = {
+      name: name,
+      email: email,
+      password: password,
+    };
+
+    const promise = axios.post(
+      `${import.meta.env.VITE_API_URL}/cadastro`,
+      newUser
+    );
+
+    if (password === confirmPassword) {
+      promise.then((res) => {
+        navigate("/");
+      });
+      promise.catch((err) => {
+        alert(err.response.data.message);
+      });
+    } else {
+      alert("Senhas diferentes!");
+    }
+  }
+
   return (
     <SingUpContainer>
-      <form>
+      <form onSubmit={signUp}>
         <MyWalletLogo />
-        <input placeholder="Nome" type="text" />
-        <input placeholder="E-mail" type="email" />
-        <input placeholder="Senha" type="password" autocomplete="new-password" />
-        <input placeholder="Confirme a senha" type="password" autocomplete="new-password" />
-        <button>Cadastrar</button>
+        <input
+          placeholder="Nome"
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+        />
+        <input
+          placeholder="E-mail"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+        <input
+          placeholder="Senha"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+        <input
+          placeholder="Confirme a senha"
+          type="password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPass(e.target.value)}
+          required
+        />
+        <button type="submit">Cadastrar</button>
       </form>
 
-      <Link>
-        Já tem uma conta? Entre agora!
-      </Link>
+      <Link to={"/"}>Já tem uma conta? Entre agora!</Link>
     </SingUpContainer>
-  )
+  );
 }
 
 const SingUpContainer = styled.section`
@@ -27,4 +84,4 @@ const SingUpContainer = styled.section`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-`
+`;
