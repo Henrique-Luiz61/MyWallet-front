@@ -35,7 +35,7 @@ export default function SignInPage() {
     });
     promise.catch((err) => {
       console.log("ERRO: ", err.response);
-      alert(err.response.data.message);
+      alert(err.response.data);
     });
   }
 
@@ -44,6 +44,7 @@ export default function SignInPage() {
       <form onSubmit={signIn}>
         <MyWalletLogo />
         <input
+          data-test="email"
           placeholder="E-mail"
           type="email"
           value={email}
@@ -51,13 +52,16 @@ export default function SignInPage() {
           required
         />
         <input
+          data-test="password"
           placeholder="Senha"
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <button type="submit">Entrar</button>
+        <button data-test="sign-in-submit" type="submit">
+          Entrar
+        </button>
       </form>
 
       <Link to={"/cadastro"}>Primeira vez? Cadastre-se!</Link>

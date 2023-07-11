@@ -31,7 +31,7 @@ export default function HomePage() {
       if (!token) {
         alert("Faça login!");
       } else {
-        alert(err.response.data.message);
+        alert(err.response.data);
       }
     });
   }, []);
