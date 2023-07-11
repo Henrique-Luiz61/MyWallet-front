@@ -44,24 +44,24 @@ export default function SignInPage() {
       <form onSubmit={signIn}>
         <MyWalletLogo />
         <input
-          data-test="email"
           placeholder="E-mail"
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
+          data-test="email"
         />
         <input
-          data-test="password"
           placeholder="Senha"
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
+          data-test="password"
         />
-        <button data-test="sign-in-submit" type="submit">
+        <buttont type="submit" data-test="sign-in-submit">
           Entrar
-        </button>
+        </buttont>
       </form>
 
       <Link to={"/cadastro"}>Primeira vez? Cadastre-se!</Link>

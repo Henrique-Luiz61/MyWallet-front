@@ -43,38 +43,38 @@ export default function SignUpPage() {
       <form onSubmit={signUp}>
         <MyWalletLogo />
         <input
-          data-test="name"
           placeholder="Nome"
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
           required
+          data-test="name"
         />
         <input
-          data-test="email"
           placeholder="E-mail"
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
+          data-test="email"
         />
         <input
-          data-test="password"
           placeholder="Senha"
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
+          data-test="password"
         />
         <input
-          data-test="conf-password"
           placeholder="Confirme a senha"
           type="password"
           value={confirmPassword}
           onChange={(e) => setConfirmPass(e.target.value)}
           required
+          data-test="conf-password"
         />
-        <button data-test="sign-up-submit" type="submit">
+        <button type="submit" data-test="sign-up-submit">
           Cadastrar
         </button>
       </form>

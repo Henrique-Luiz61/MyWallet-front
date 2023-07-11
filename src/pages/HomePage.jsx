@@ -45,7 +45,7 @@ export default function HomePage() {
     <HomeContainer>
       <Header>
         <h1 data-test="user-name">Olá, {name}</h1>
-        <BiExit data-test="logout" onClick={logout} />
+        <BiExit onClick={logout} data-test="logout" />
       </Header>
 
       <TransactionsContainer>
@@ -57,8 +57,8 @@ export default function HomePage() {
                 <strong data-test="registry-name">{tra.descricao}</strong>
               </div>
               <Value
-                data-test="registry-amount"
                 color={tra.tipo === "entrada" ? "positivo" : "negativo"}
+                data-test="registry-amount"
               >
                 {tra.valor}
               </Value>
@@ -69,8 +69,8 @@ export default function HomePage() {
         <article>
           <strong>Saldo</strong>
           <Value
-            data-test="total-amount"
             color={total > 0 ? "positivo" : "negativo"}
+            data-test="total-amount"
           >
             {total.toFixed(2)}
           </Value>
