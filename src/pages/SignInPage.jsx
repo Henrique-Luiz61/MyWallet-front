@@ -46,22 +46,23 @@ export default function SignInPage() {
         <input
           placeholder="E-mail"
           type="email"
+          required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          required
           data-test="email"
         />
         <input
           placeholder="Senha"
           type="password"
+          autoComplete="new-password"
+          required
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          required
           data-test="password"
         />
-        <buttont type="submit" data-test="sign-in-submit">
+        <button type="submit" data-test="sign-in-submit">
           Entrar
-        </buttont>
+        </button>
       </form>
 
       <Link to={"/cadastro"}>Primeira vez? Cadastre-se!</Link>

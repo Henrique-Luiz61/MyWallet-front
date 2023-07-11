@@ -37,8 +37,24 @@ export default function HomePage() {
   }, []);
 
   function logout() {
-    localStorage.removeItem("user");
-    navigate("/");
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    const promise = axios.delete(
+      `${import.meta.env.VITE_API_URL}/home`,
+      config
+    );
+    promise.then((res) => {
+      console.log(res.data);
+      localStorage.clear();
+      navigate("/");
+    });
+    promise.catch((err) => {
+      alert(err.response.data);
+    });
   }
 
   return (

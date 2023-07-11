@@ -28,6 +28,7 @@ export default function SignUpPage() {
 
     if (password === confirmPassword) {
       promise.then((res) => {
+        console.log(res.data);
         navigate("/");
       });
       promise.catch((err) => {
@@ -45,33 +46,35 @@ export default function SignUpPage() {
         <input
           placeholder="Nome"
           type="text"
+          required
           value={name}
           onChange={(e) => setName(e.target.value)}
-          required
           data-test="name"
         />
         <input
           placeholder="E-mail"
           type="email"
+          required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          required
           data-test="email"
         />
         <input
           placeholder="Senha"
           type="password"
+          autoComplete="new-password"
+          required
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          required
           data-test="password"
         />
         <input
           placeholder="Confirme a senha"
           type="password"
+          autoComplete="new-password"
           value={confirmPassword}
-          onChange={(e) => setConfirmPass(e.target.value)}
           required
+          onChange={(e) => setConfirmPass(e.target.value)}
           data-test="conf-password"
         />
         <button type="submit" data-test="sign-up-submit">
