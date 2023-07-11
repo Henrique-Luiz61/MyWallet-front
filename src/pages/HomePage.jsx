@@ -5,13 +5,14 @@ import { useEffect, useState } from "react";
 import { useContext } from "react";
 import { AuthContext } from "../contexts/auth";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function HomePage() {
   const [transacoes, setTransacoes] = useState([]);
-  const [entradas, setEntradas] = useState([]);
+  const [total, setTotal] = useState(0);
+  const navigate = useNavigate();
 
-  const { token } = useContext(AuthContext);
+  const { token, name } = useContext(AuthContext);
 
   useEffect(() => {
     const config = {
@@ -23,23 +24,28 @@ export default function HomePage() {
     const promise = axios.get(`${import.meta.env.VITE_API_URL}/home`, config);
 
     promise.then((res) => {
-      setTransacoes(res.data);
-      const novasEntradas = res.data.filter((ent) => {
-        if (ent.tipo === "entrada") return ent.valor;
-      });
-      console.log(novasEntradas);
-      setEntradas(...novasEntradas);
+      setTransacoes(res.data.transacoes);
+      setTotal(res.data.total);
     });
     promise.catch((err) => {
-      alert(err.response.data.message);
+      if (!token) {
+        alert("Faça login!");
+      } else {
+        alert(err.response.data.message);
+      }
     });
   }, []);
+
+  function logout() {
+    localStorage.removeItem("user");
+    navigate("/");
+  }
 
   return (
     <HomeContainer>
       <Header>
-        <h1 data-test="user-name">Olá, Fulano</h1>
-        <BiExit data-test="logout" />
+        <h1 data-test="user-name">Olá, {name}</h1>
+        <BiExit data-test="logout" onClick={logout} />
       </Header>
 
       <TransactionsContainer>
@@ -52,7 +58,7 @@ export default function HomePage() {
               </div>
               <Value
                 data-test="registry-amount"
-                color={entradas.includes(tra.valor) ? "positivo" : "negativo"}
+                color={tra.tipo === "entrada" ? "positivo" : "negativo"}
               >
                 {tra.valor}
               </Value>
@@ -62,8 +68,11 @@ export default function HomePage() {
 
         <article>
           <strong>Saldo</strong>
-          <Value data-test="total-amount" color={"positivo"}>
-            2880,00
+          <Value
+            data-test="total-amount"
+            color={total > 0 ? "positivo" : "negativo"}
+          >
+            {total.toFixed(2)}
           </Value>
         </article>
       </TransactionsContainer>

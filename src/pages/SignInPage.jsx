@@ -9,7 +9,7 @@ import { AuthContext } from "../contexts/auth";
 export default function SignInPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { setToken } = useContext(AuthContext);
+  const { setToken, setName } = useContext(AuthContext);
 
   const navigate = useNavigate();
 
@@ -26,8 +26,12 @@ export default function SignInPage() {
     const promise = axios.post(import.meta.env.VITE_API_URL, newLogin);
 
     promise.then((res) => {
+      const { token, userName } = res.data;
+      setToken(token);
+      setName(userName);
+      localStorage.setItem("user", JSON.stringify({ token, userName }));
+
       navigate("/home");
-      setToken(res.data);
     });
     promise.catch((err) => {
       console.log("ERRO: ", err.response);
