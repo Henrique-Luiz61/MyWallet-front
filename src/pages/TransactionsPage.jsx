@@ -46,6 +46,7 @@ export default function TransactionsPage() {
       <h1>Nova {tipo}</h1>
       <form onSubmit={saveTransaction}>
         <input
+          data-test="registry-amount-input"
           placeholder="Valor"
           type="number"
           value={valor}
@@ -53,13 +54,16 @@ export default function TransactionsPage() {
           required
         />
         <input
+          data-test="registry-name-input"
           placeholder="Descrição"
           type="text"
           value={descricao}
           onChange={(e) => setDescricao(e.target.value)}
           required
         />
-        <button type="submit">Salvar {tipo}</button>
+        <button data-test="registry-save" type="submit">
+          Salvar {tipo}
+        </button>
       </form>
     </TransactionsContainer>
   );

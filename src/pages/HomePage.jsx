@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 
 export default function HomePage() {
   const [transacoes, setTransacoes] = useState([]);
+  const [entradas, setEntradas] = useState([]);
 
   const { token } = useContext(AuthContext);
 
@@ -23,6 +24,11 @@ export default function HomePage() {
 
     promise.then((res) => {
       setTransacoes(res.data);
+      const novasEntradas = res.data.filter((ent) => {
+        if (ent.tipo === "entrada") return ent.valor;
+      });
+      console.log(novasEntradas);
+      setEntradas(...novasEntradas);
     });
     promise.catch((err) => {
       alert(err.response.data.message);
@@ -32,8 +38,8 @@ export default function HomePage() {
   return (
     <HomeContainer>
       <Header>
-        <h1>Olá, Fulano</h1>
-        <BiExit />
+        <h1 data-test="user-name">Olá, Fulano</h1>
+        <BiExit data-test="logout" />
       </Header>
 
       <TransactionsContainer>
@@ -42,21 +48,28 @@ export default function HomePage() {
             <ListItemContainer key={i}>
               <div>
                 <span>{tra.data}</span>
-                <strong>{tra.descricao}</strong>
+                <strong data-test="registry-name">{tra.descricao}</strong>
               </div>
-              <Value color={"negativo"}>{tra.valor}</Value>
+              <Value
+                data-test="registry-amount"
+                color={entradas.includes(tra.valor) ? "positivo" : "negativo"}
+              >
+                {tra.valor}
+              </Value>
             </ListItemContainer>
           ))}
         </ul>
 
         <article>
           <strong>Saldo</strong>
-          <Value color={"positivo"}>2880,00</Value>
+          <Value data-test="total-amount" color={"positivo"}>
+            2880,00
+          </Value>
         </article>
       </TransactionsContainer>
 
       <ButtonsContainer>
-        <button>
+        <button data-test="new-income">
           <Link to={"/nova-transacao/entrada"}>
             <AiOutlinePlusCircle />
             <p>
@@ -65,7 +78,7 @@ export default function HomePage() {
           </Link>
         </button>
 
-        <button>
+        <button data-test="new-expense">
           <Link to={"/nova-transacao/saida"}>
             <AiOutlineMinusCircle />
             <p>
